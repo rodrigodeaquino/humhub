@@ -1,0 +1,2 @@
+[05-Jul-2016 20:12:19 UTC] PHP Warning:  require(/home/aquinos/public_html/humhub/protected/vendor/autoload.php): failed to open stream: No such file or directory in /home/aquinos/public_html/humhub/protected/yii on line 17
+[05-Jul-2016 20:12:19 UTC] PHP Fatal error:  require(): Failed opening required '/home/aquinos/public_html/humhub/protected/vendor/autoload.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/aquinos/public_html/humhub/protected/yii on line 17
