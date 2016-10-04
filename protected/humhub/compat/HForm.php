@@ -194,7 +194,7 @@ class HForm extends \yii\base\Component
                 }
                 elseif ($definition['type'] == 'file')
                 {
-                    $output .= $this->form->field($model, $name)->fileInput($options)->label(false);
+                    $output .= $this->form->field($model, $name)->fileInput($options);
                 }
                 elseif ($definition['type'] == 'password') {
                     $output .= $this->form->field($model, $name)->passwordInput($options);
