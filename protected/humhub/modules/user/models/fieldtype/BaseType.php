@@ -81,6 +81,7 @@ class BaseType extends \yii\base\Model
             Date::className() => Yii::t('UserModule.models_ProfileFieldType', 'Date'),
             DateTime::className() => Yii::t('UserModule.models_ProfileFieldType', 'Datetime'),
             Birthday::className() => Yii::t('UserModule.models_ProfileFieldType', 'Birthday'),
+            Checkbox::className() => Yii::t('UserModule.models_ProfileFieldType', 'Checkbox'),
                 ), $this->fieldTypes);
         return $fieldTypes;
     }

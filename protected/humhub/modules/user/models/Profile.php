@@ -9,6 +9,7 @@
 namespace humhub\modules\user\models;
 
 use Yii;
+use humhub\libs\CPFCNPJValidator;
 
 /**
  * This is the model class for table "profile".
@@ -64,6 +65,7 @@ class Profile extends \yii\db\ActiveRecord
         $rules = [
             [['user_id'], 'required'],
             [['user_id'], 'integer'],
+            ['cnpj', CPFCNPJValidator::className()]
         ];
 
         foreach (ProfileField::find()->all() as $profileField) {
