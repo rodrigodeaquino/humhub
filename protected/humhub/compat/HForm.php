@@ -191,7 +191,12 @@ class HForm extends \yii\base\Component
                     $output .= $this->form->field($model, $name)->textarea($options);
                 } elseif ($definition['type'] == 'hidden') {
                     $output .= $this->form->field($model, $name)->hiddenInput($options)->label(false);
-                } elseif ($definition['type'] == 'password') {
+                }
+                elseif ($definition['type'] == 'file')
+                {
+                    $output .= $this->form->field($model, $name)->fileInput($options)->label(false);
+                }
+                elseif ($definition['type'] == 'password') {
                     $output .= $this->form->field($model, $name)->passwordInput($options);
                 } elseif ($definition['type'] == 'datetime') {
                     $format = Yii::$app->formatter->dateFormat;
