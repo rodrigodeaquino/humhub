@@ -11,6 +11,7 @@ namespace humhub\modules\user\controllers;
 use Yii;
 use yii\web\HttpException;
 use yii\helpers\Url;
+use yii\helpers\Inflector;
 use humhub\components\Controller;
 use humhub\modules\user\models\Invite;
 use humhub\compat\HForm;
@@ -269,7 +270,7 @@ class AuthController extends Controller
 
             $this->forcePostRequest();
 
-            // Registe User
+            // Register User
             $form->models['User']->email = $userInvite->email;
             $form->models['User']->language = Yii::$app->language;
             if ($form->models['User']->save()) {
@@ -282,6 +283,44 @@ class AuthController extends Controller
                 $form->models['UserPassword']->user_id = $form->models['User']->id;
                 $form->models['UserPassword']->setPassword($form->models['UserPassword']->newPassword);
                 $form->models['UserPassword']->save();
+
+                // Save uploaded files.
+                if( count($_FILES) )
+                {
+                    # Obtém os nomes das posições do array somente para arquivos enviados corretamente, sem erro.
+                    $arquivosValidos = array();
+                    foreach($_FILES['Profile']['error'] as $key => $value)
+                    {
+                        if($value === 0)
+                        {
+                            array_push($arquivosValidos, $key);
+                        }
+                    }
+                    # Cria local para guarda dos arquivos.
+                    $uniqueUploadDir = $form->models['User']->getId();
+                    $uploadPath = \Yii::getAlias("@webroot") . DIRECTORY_SEPARATOR . "uploads" . DIRECTORY_SEPARATOR . 'user_documents' . DIRECTORY_SEPARATOR . $uniqueUploadDir . DIRECTORY_SEPARATOR;
+                    # Percorre os arquivos válido e grava-os em disco.
+                    foreach( $arquivosValidos as $av)
+                    {
+                        # Obtem informações do arquivo para gravação.
+                        $fileName           = $_FILES['Profile']['name'][$av];
+                        $fileType           = $_FILES['Profile']['type'][$av];
+                        $fileTmpName        = $_FILES['Profile']['tmp_name'][$av];
+                        $fileExtension      = pathinfo($fileName, PATHINFO_EXTENSION);
+                        $fileExtension      = $fileExtension?".".$fileExtension:'';
+                        $fileSize           = $_FILES['Profile']['size'][$av];
+                        # Converte nome original para nome Slugged.
+                        $fileNameSlugged    = explode(' ', $fileName);
+                        $fileNameSlugged    = Inflector::slug(implode('-', $fileNameSlugged));
+                        # Cria diretório para guardar os arquivos do usuário específico.
+                        if (!is_dir($uploadPath))
+                        {
+                            mkdir($uploadPath);
+                        }
+                        # Salva o arquivo no diretório especificado.
+                        move_uploaded_file($fileTmpName, $uploadPath.$fileNameSlugged.$fileExtension);
+                    }
+                }
 
                 // Autologin user
                 if (!$needApproval) {
